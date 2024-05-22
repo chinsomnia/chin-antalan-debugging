@@ -25,6 +25,7 @@ function getRandomNumber(min, max) {
 function checkGuess() {
   // Get value from guess input element
   const guess = parseInt(guessInput.value, 10);
+  console.log(`Guess: ${guess}`);
   attempts = attempts + 1;
 
   hideAllMessages();
@@ -32,23 +33,21 @@ function checkGuess() {
   if (guess === targetNumber) {
     numberOfGuessesMessage.style.display = "";
     numberOfGuessesMessage.innerHTML = `You made ${attempts} guesses`;
-
-    correctMessage.style.display = "";
-
+    correctMessage.style.display = "block";
     submitButton.disabled = true;
     guessInput.disabled = true;
   }
 
   if (guess !== targetNumber) {
     if (guess < targetNumber) {
-      tooLowMessage.style.display = "";
+      tooLowMessage.style.display = "block";
     } else {
-      tooHighMessage.style.display = ""; // BUG: change else tooLowMessage to tooHighMessage
+      tooHighMessage.style.display = "block"; // BUG: change else tooLowMessage to tooHighMessage
     }
 
     const remainingAttempts = maxNumberOfAttempts - attempts;
 
-    numberOfGuessesMessage.style.display = "";
+    numberOfGuessesMessage.style.display = "inline";
     numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttempts} guesses remaining`;
   }
 
@@ -56,15 +55,19 @@ function checkGuess() {
     // BUG: changed ==== to ===
     submitButton.disabled = true;
     guessInput.disabled = true;
+    maxGuessesMessage.style.display = "";
   }
 
   guessInput.value = "";
-
+  resetButton.disabled = false; // BUG: changed from true to false
   resetButton.style.display = "";
 }
 
+checkGuess();
+
 function hideAllMessages() {
-  for (let elementIndex = 0; elementIndex <= messages.length; elementIndex++) {
+  for (let elementIndex = 0; elementIndex < messages.length; elementIndex++) {
+    // BUG: removed = from <=
     messages[elementIndex].style.display = "none";
   }
 }
@@ -76,14 +79,15 @@ function setup() {
   console.log(`target number: ${targetNumber}`);
 
   // Reset number of attempts
-  maxNumberOfAttempts = 0;
+  attempts = 0; // BUG: changed maxNumberOfAttempts = 0 to attempts = 0
 
   // Enable the input and submit button
   submitButton.disabled = false; // BUG: changed disabeld to disabled
   guessInput.disabled = false;
 
   hideAllMessages();
-  resetButton.style.display = "none";
+  resetButton.disabled = true;
+  resetButton.style.display = "none"; // BUG: added resetButton.style.display = "none" to hide button;
 }
 
 submitButton.addEventListener("click", checkGuess);
